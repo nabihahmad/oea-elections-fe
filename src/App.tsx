@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import SearchPage from "./pages/SearchPage";
 import VotePage from "./pages/VotePage";
 import ReportsPage from "./pages/ReportsPage";
+import AdminPage from "./pages/AdminPage";
 import PortalLayout from "./components/PortalLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
@@ -23,6 +24,7 @@ const DefaultRedirect = () => {
   if (user.roles.indexOf("registrator") !== -1) return <Navigate to="/search" replace />;
   if (user.roles.indexOf("voting_agent") !== -1) return <Navigate to="/vote" replace />;
   if (user.roles.indexOf("reporter") !== -1) return <Navigate to="/reporting" replace />;
+  if (user.roles.indexOf("admin") !== -1) return <Navigate to="/admin" replace />;
   return <Navigate to="/login" replace />;
 };
 
@@ -57,6 +59,14 @@ const App = () => (
               element={
                 <ProtectedRoute requiredRole="reporter">
                   <PortalLayout><ReportsPage /></PortalLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <PortalLayout><AdminPage /></PortalLayout>
                 </ProtectedRoute>
               }
             />

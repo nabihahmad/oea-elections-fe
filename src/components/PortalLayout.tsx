@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { NavLink, useLocation } from "react-router-dom";
-import { Search, Vote, BarChart3, LogOut, User } from "lucide-react";
+import { Search, Vote, BarChart3, LogOut, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
@@ -14,6 +14,7 @@ const PortalLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     { to: "/search", label: "Search", icon: Search, visible: user.roles.includes("registrator") },
     { to: "/vote", label: "Vote", icon: Vote, visible: user.roles.includes("voting_agent") },
     { to: "/reporting", label: "Reporting", icon: BarChart3, visible: user.roles.includes("reporter") },
+    { to: "/admin", label: "Admin", icon: Lock, visible: user.roles.includes("admin") },
   ].filter((item) => item.visible);
 
   return (
