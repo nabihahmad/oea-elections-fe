@@ -35,13 +35,13 @@ const SearchPage = () => {
       const data = await response.json();
 
       setMobile(data.mobile || "");
-      const status = data.checked_in_at ? "Checked In" : "Not Checked In";
 
       setResult({
         id: data._id,
         name: data.full_name || "N/A",
         mobile: data.mobile || "-",
         oea_number: data.oea_number,
+        ballot_box: data.ballot_box || "N/A",
         registered_at: data.registered_at ? new Date(data.registered_at).toLocaleDateString() : "N/A",
         settlement_year: data.settlement_year,
         birthday: data.birthday ? new Date(data.birthday).toLocaleDateString() : "N/A",
@@ -49,7 +49,7 @@ const SearchPage = () => {
         degree: data.degree || "N/A",
         graduation_year: data.graduation_year || "N/A",
         branch: data.branch || "N/A",
-        status,
+        status: data.checked_in_at ? "Checked In" : "Not Checked In",
       });
 
     } catch (err: any) {
@@ -197,10 +197,10 @@ const SearchPage = () => {
           </CardHeader>
           <CardContent>
             <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
-              <div>
+              {/* <div>
                 <dt className="font-medium text-muted-foreground">ID</dt>
                 <dd className="mt-1 text-foreground">{result.id}</dd>
-              </div>
+              </div> */}
               <div>
                 <dt className="font-medium text-muted-foreground">Name</dt>
                 <dd className="mt-1 text-foreground">{result.name}</dd>
@@ -208,6 +208,10 @@ const SearchPage = () => {
               <div>
                 <dt className="font-medium text-muted-foreground">OEA Number</dt>
                 <dd className="mt-1 text-foreground">{result.oea_number}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-muted-foreground">Ballot Box</dt>
+                <dd className="mt-1 text-foreground"><span className="inline-flex rounded-full bg-success/10 px-2.5 py-0.5 text-sm font-large text-accent">{result.ballot_box}</span></dd>
               </div>
               <div>
                 <dt className="font-medium text-muted-foreground">Status</dt>
@@ -257,7 +261,7 @@ const SearchPage = () => {
                   </Button>
                 </div>
                 ) : (
-                <div className="mt-3">
+                <div className="mt-6 border-t pt-4">
                   <Button onClick={handleCheckOut} disabled={updating} className="h-12 w-full gap-2 sm:w-auto">
                     <UserX className="h-4 w-4" />
                     Remove Check In

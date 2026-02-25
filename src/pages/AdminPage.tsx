@@ -9,6 +9,7 @@ interface Admins {
   full_name: string;
   roles: string[];
   password: string;
+  ballot_box: number;
 }
 
 const AdminPage = () => {
@@ -16,6 +17,7 @@ const AdminPage = () => {
 
   const [admins, setAdmins] = useState<Admins[]>([]);
   const [editingAdmin, setEditingAdmin] = useState<Admins | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   useEffect(() => {
     const listAdmins = async () => {
@@ -88,10 +90,10 @@ const AdminPage = () => {
       </div>
       <div className="mb-6">
         <button
-          onClick={() => setEditingAdmin({ _id: "", username: "", full_name: "", roles: [], password: "" })}
+          onClick={() => setEditingAdmin({ _id: "", username: "", full_name: "", roles: [], password: "", ballot_box: -1 })}
           className="bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:opacity-90"
         >
-          Create Admin
+          Create Agent
         </button>
       </div>
       <div className="mb-6">
@@ -102,6 +104,7 @@ const AdminPage = () => {
               <th className="px-4 py-2 text-left text-sm font-semibold text-foreground">Full Name</th>
               <th className="px-4 py-2 text-left text-sm font-semibold text-foreground">Username</th>
               <th className="px-4 py-2 text-left text-sm font-semibold text-foreground">Roles</th>
+              <th className="px-4 py-2 text-left text-sm font-semibold text-foreground">Ballot Box</th>
               <th className="px-4 py-2 text-left text-sm font-semibold text-foreground">Actions</th>
             </tr>
           </thead>
@@ -120,6 +123,7 @@ const AdminPage = () => {
                     ))}
                   </div>
                 </td>
+                <td className="px-4 py-2 text-sm text-foreground">{admin.ballot_box}</td>
                 <td className="px-4 py-2 text-sm text-foreground">
                     <button onClick={() => openEditOverlay(admin)} disabled={admin._id === user?.id} className="text-sm font-medium text-primary hover:underline disabled:opacity-50 disabled:cursor-not-allowed">Edit</button>
                 </td>
@@ -183,16 +187,33 @@ const AdminPage = () => {
             </div>
             </div>
         </div>
+        {editingAdmin.roles.includes("voting_agent") && (
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-foreground mb-1">Ballot Box Number</label>
+            <input
+              type="number"
+              value={editingAdmin.ballot_box}
+              onChange={(e) => setEditingAdmin({ ...editingAdmin, ballot_box: parseInt(e.target.value) || -1 })}
+              className="w-full px-3 py-2 border border-border rounded-md bg-muted text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+        )}
         <div className="flex gap-3 mt-6">
           {editingAdmin._id ? (
             <>
               <button onClick={() => handleSave(editingAdmin)} className="flex-1 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:opacity-90">Update</button>
-              <button onClick={() => handleDelete(editingAdmin._id)} className="flex-1 bg-destructive text-destructive-foreground px-4 py-2 rounded-md font-medium hover:opacity-90">Delete</button>
+              { confirmingDelete ? (
+                <>
+                  <button onClick={() => {setConfirmingDelete(false);handleDelete(editingAdmin._id)}} className="flex-1 bg-destructive text-destructive-foreground px-4 py-2 rounded-md font-medium hover:opacity-90">Confirm Deletion</button>
+                </>
+              ) : (
+                <button onClick={() => setConfirmingDelete(true)} className="flex-1 bg-destructive/80 text-destructive-foreground px-4 py-2 rounded-md font-medium hover:opacity-90">Delete</button>
+              )}
             </>
           ) : (
-            <button onClick={() => handleCreate(editingAdmin)} className="flex-1 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:opacity-90">Create</button>
+            <button onClick={() => {setConfirmingDelete(false);handleCreate(editingAdmin)}} className="flex-1 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:opacity-90">Create</button>
           )}
-          <button onClick={() => setEditingAdmin(null)} className="flex-1 bg-muted text-foreground px-4 py-2 rounded-md font-medium hover:opacity-90">Cancel</button>
+          <button onClick={() => {setConfirmingDelete(false);setEditingAdmin(null)}} className="flex-1 bg-muted text-foreground px-4 py-2 rounded-md font-medium hover:opacity-90">Cancel</button>
         </div>
           </div>
         </div>
