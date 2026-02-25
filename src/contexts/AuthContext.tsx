@@ -107,7 +107,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [fetchCurrentUser, user]);
 
   const login = useCallback(async (username: string, password: string) => {
-    console.log("logging in");
     setIsLoading(true);
     setError(null);
 
@@ -134,7 +133,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         roles: data.admin.roles ?? [],
       };
 
-      console.log("Login successful, user data:", authUser);
       setTokenCookie(data.token);
       setUser(authUser);
     } catch (err: any) {

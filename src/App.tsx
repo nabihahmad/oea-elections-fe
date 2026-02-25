@@ -16,9 +16,7 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const DefaultRedirect = () => {
-  console.log("DefaultRedirect rendered");
   const { user, isInitializing } = useAuth();
-  console.log("User roles on default redirect:", user?.roles);
   if (isInitializing) return null;
   if (!user) return <Navigate to="/login" replace />;
   if (user.roles.indexOf("registrator") !== -1) return <Navigate to="/search" replace />;

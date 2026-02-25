@@ -8,7 +8,6 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
   const { user, isInitializing } = useAuth();
-  console.log("ProtectedRoute rendered, user:", user, "requiredRole:", requiredRole);
 
   if (isInitializing) return null;
   if (!user) return <Navigate to="/login" replace />;

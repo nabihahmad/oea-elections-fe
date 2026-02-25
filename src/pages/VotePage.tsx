@@ -59,8 +59,6 @@ const VotePage = () => {
       }
       
       const voteData = await votingResponse.json();
-      console.log('voteData', voteData);
-
       const status = voteData?.voted_at ? "Voted" : "Not Voted";
 
       setVoteResult({
